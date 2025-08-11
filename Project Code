@@ -1,0 +1,63 @@
+S3 Data Transformation Flow Project
+
+Architecture:
+
+[Source S3 Bucket] → [AppFlow Transformation] → [Destination S3 Bucket]
+
+Step-by-Step Implementation:
+
+Step 1️⃣: Create S3 Buckets
+
+We’ll need two buckets:
+Source bucket (stores raw files)
+Destination bucket (stores transformed files)
+
+Steps:
+Go to AWS S3 Console → Create bucket.
+Name: appflow-source-bucket-yourname
+Region: Your preferred region (e.g., us-east-1)
+Keep defaults, uncheck "Block all public access" (but keep it private)
+Click Create bucket
+
+Repeat for Destination bucket: appflow-dest-bucket-yourname
+
+Step 2️⃣: Upload a Sample CSV to Source Bucket
+Create a folder and upload a simple file, employees.csv, on PC:
+
+id,name,department
+1,Alice,IT
+2,Bob,HR
+3,Charlie,Finance
+Upload it to your source bucket.
+
+Step 3️⃣: Create an IAM Role for AppFlow
+AppFlow needs permission to read from source S3 and write to destination S3.
+
+Steps:
+Go to IAM → Roles → Create role
+Select AppFlow as the AWS service
+Attach the AmazonS3FullAccess policy (or a least-privilege custom policy)
+Name it: AppFlowS3Role and create the role
+
+Step 4️⃣: Create the AppFlow Flow
+Steps:
+
+Go to AWS AppFlow Console → Create flow
+Name: S3DataTransferFlow
+Source name: Amazon S3
+Choose your source bucket → Select employees.csv, provide foldername/ as prefix
+
+Destination name: Amazon S3
+Choose your destination bucket
+Select IAM role: AppFlowS3Role
+(Optional) Add a mapping: e.g., rename name to employee_name
+
+After creating the AppFlow.Click Run flow.
+
+Step 5️⃣: Verify Output
+Go to your destination bucket and check if a new CSV file exists with the transformed field names.
+
+=> We can use you to specify which amount of data to add in the destination using some specifications in AppFlow and use Lambda Function code.
+
+
+*THE END*
